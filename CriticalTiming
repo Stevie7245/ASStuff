@@ -1,0 +1,45 @@
+-- The Hierarchy is as follows:
+-- StarterGui > ScreenGui > Frame > {LocalScript, Marker, Status, Win}
+-- Marker, Status, and Win are TextLabels. Try it yourself if you'd like!
+
+local UserInputService = game:GetService("UserInputService")
+local marker = script.Parent.Marker
+local status = script.Parent.Status
+local cd = false
+
+local startX = 0
+local endX = 0.98
+local firstGoodPos = 0.8
+local lastGoodPos = 0.83
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	
+	if input.UserInputType == Enum.UserInputType.MouseButton1 and gameProcessed == false and cd == false then
+		cd = true
+		print("Clicked")
+		wait(3)
+		cd = false
+		print("Restarting")
+	end
+end)
+
+while wait() do
+	
+	status.Visible = cd
+	
+	if marker.Position.X.Scale >= startX and marker.Position.X.Scale < endX and cd == false then
+		marker.Position = UDim2.new(marker.Position.X.Scale + 0.03, 0, 0, 0)
+	
+	elseif cd and marker.Position.X.Scale >= 0.8 and marker.Position.X.Scale <= 0.83 then
+		status.Text = "Critical!"
+		status.TextColor3 = Color3.new(0, 1, 0)
+	
+	elseif marker.Position.X.Scale > endX then
+		marker.Position = UDim2.new(startX, 0, 0, 0)
+		
+	else
+		status.Text = "Miss!"
+		status.TextColor3 = Color3.new(1, 0, 0)
+		
+	end
+end
